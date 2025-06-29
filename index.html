@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>💱 Calculadora VES-BRL | Para Mamá</title>
+    <title>💱 Calculadora Multi-Divisas | Para Mamá</title>
     <style>
         * {
             box-sizing: border-box;
@@ -46,6 +46,50 @@
             color: #666;
             font-size: 12px;
             margin-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9ff;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 20px;
+            gap: 4px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 8px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+        }
+
+        .tab:hover {
+            background: #e1e5f2;
+        }
+
+        .tab.active:hover {
+            background: #5a67d8;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .flags {
@@ -140,6 +184,21 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
         }
 
+        /* Estilos específicos para USD P2P */
+        .usd-input {
+            border: 2px solid #28a745;
+            background: #f8fff9;
+        }
+
+        .usd-input:focus {
+            border-color: #20c997;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+        }
+
+        .usd-result {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
         .currency-label {
             font-weight: bold;
             color: #555;
@@ -209,6 +268,10 @@
             border-radius: 1px;
         }
 
+        .usd-separator {
+            background: linear-gradient(90deg, #28a745, #20c997);
+        }
+
         /* Específico para Android Chrome */
         @media screen and (max-width: 480px) {
             body {
@@ -228,6 +291,11 @@
             .flags {
                 font-size: 20px;
                 gap: 12px;
+            }
+
+            .tab {
+                padding: 8px 6px;
+                font-size: 11px;
             }
 
             .converter-section {
@@ -300,49 +368,107 @@
 <body>
     <div class="calculator">
         <div class="header">
-            <h1 class="title">💰 Calculadora de Divisas</h1>
-            <p class="subtitle">VES ⇄ BRL</p>
+            <h1 class="title">💰 Calculadora Multi-Divisas</h1>
+            <p class="subtitle">VES ⇄ BRL | USD P2P</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('ves-brl')">
+                🇻🇪⇄🇧🇷 VES-BRL
+            </button>
+            <button class="tab" onclick="showTab('usd-p2p')">
+                💲 USD P2P
+            </button>
+        </div>
+
+        <!-- Tab VES-BRL -->
+        <div id="ves-brl" class="tab-content active">
             <div class="flags">
                 🇻🇪 ⇄ 🇧🇷
             </div>
+
+            <div class="converter-section">
+                <div class="converter-title">
+                    🇻🇪 Bolívares → Reales 🇧🇷
+                </div>
+                
+                <div class="rate-section">
+                    <div class="rate-label">📊 Tasa VES a BRL</div>
+                    <input type="number" id="rateVesToBrl" class="rate-input" placeholder="" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <span class="currency-label">VES:</span>
+                    <input type="number" id="vesInput" class="currency-input" placeholder="" step="0.01">
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="result" id="brlResult">Ingresa tasa y cantidad</div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="converter-section">
+                <div class="converter-title">
+                    🇧🇷 Reales → Bolívares 🇻🇪
+                </div>
+                
+                <div class="rate-section">
+                    <div class="rate-label">📊 Tasa BRL a VES</div>
+                    <input type="number" id="rateBrlToVes" class="rate-input" placeholder="" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <span class="currency-label">BRL:</span>
+                    <input type="number" id="brlInput" class="currency-input" placeholder="" step="0.01">
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="result" id="vesResult">Ingresa tasa y cantidad</div>
+            </div>
         </div>
 
-        <div class="converter-section">
-            <div class="converter-title">
-                🇻🇪 Bolívares → Reales 🇧🇷
-            </div>
-            
-            <div class="rate-section">
-                <div class="rate-label">📊 Tasa VES a BRL</div>
-                <input type="number" id="rateVesToBrl" class="rate-input" placeholder="" step="0.01">
+        <!-- Tab USD P2P -->
+        <div id="usd-p2p" class="tab-content">
+            <div class="flags">
+                🇻🇪 → 💲
             </div>
 
-            <div class="input-group">
-                <span class="currency-label">VES:</span>
-                <input type="number" id="vesInput" class="currency-input" placeholder="" step="0.01">
-            </div>
-            <div class="arrow">⬇️</div>
-            <div class="result" id="brlResult">Ingresa tasa y cantidad</div>
-        </div>
+            <div class="converter-section">
+                <div class="converter-title">
+                    💲 Comprar USD con Bolívares (P2P)
+                </div>
+                
+                <div class="rate-section">
+                    <div class="rate-label">📊 Tasa USD P2P (VES por 1 USD)</div>
+                    <input type="number" id="rateUsdP2p" class="rate-input" placeholder="" step="0.01">
+                </div>
 
-        <div class="separator"></div>
-
-        <div class="converter-section">
-            <div class="converter-title">
-                🇧🇷 Reales → Bolívares 🇻🇪
-            </div>
-            
-            <div class="rate-section">
-                <div class="rate-label">📊 Tasa BRL a VES</div>
-                <input type="number" id="rateBrlToVes" class="rate-input" placeholder="" step="0.01">
+                <div class="input-group">
+                    <span class="currency-label">VES:</span>
+                    <input type="number" id="vesUsdInput" class="currency-input usd-input" placeholder="" step="0.01">
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="result usd-result" id="usdResult">Ingresa tasa y cantidad</div>
             </div>
 
-            <div class="input-group">
-                <span class="currency-label">BRL:</span>
-                <input type="number" id="brlInput" class="currency-input" placeholder="" step="0.01">
+            <div class="separator usd-separator"></div>
+
+            <div class="converter-section">
+                <div class="converter-title">
+                    🇻🇪 Vender USD por Bolívares (P2P)
+                </div>
+                
+                <div class="rate-section">
+                    <div class="rate-label">📊 Tasa Venta USD (VES por 1 USD)</div>
+                    <input type="number" id="rateUsdSell" class="rate-input" placeholder="" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <span class="currency-label">USD:</span>
+                    <input type="number" id="usdSellInput" class="currency-input usd-input" placeholder="" step="0.01">
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="result usd-result" id="vesSellResult">Ingresa tasa y cantidad</div>
             </div>
-            <div class="arrow">⬇️</div>
-            <div class="result" id="vesResult">Ingresa tasa y cantidad</div>
         </div>
 
         <button class="clear-btn" onclick="clearAll()">🗑️ Limpiar Todo</button>
@@ -353,13 +479,38 @@
     </div>
 
     <script>
-        // Referencias a los elementos
+        // Referencias a los elementos VES-BRL
         const rateVesToBrlInput = document.getElementById('rateVesToBrl');
         const rateBrlToVesInput = document.getElementById('rateBrlToVes');
         const vesInput = document.getElementById('vesInput');
         const brlInput = document.getElementById('brlInput');
         const brlResult = document.getElementById('brlResult');
         const vesResult = document.getElementById('vesResult');
+
+        // Referencias a los elementos USD P2P
+        const rateUsdP2pInput = document.getElementById('rateUsdP2p');
+        const rateUsdSellInput = document.getElementById('rateUsdSell');
+        const vesUsdInput = document.getElementById('vesUsdInput');
+        const usdSellInput = document.getElementById('usdSellInput');
+        const usdResult = document.getElementById('usdResult');
+        const vesSellResult = document.getElementById('vesSellResult');
+
+        // Función para cambiar tabs
+        function showTab(tabId) {
+            // Ocultar todos los contenidos
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Desactivar todos los tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Mostrar el contenido seleccionado
+            document.getElementById(tabId).classList.add('active');
+
+            // Activar el tab seleccionado
+            event.target.classList.add('active');
+        }
 
         // Función para formatear números
         function formatNumber(num) {
@@ -369,7 +520,7 @@
             }).format(num);
         }
 
-        // Función para convertir VES a BRL
+        // Funciones VES-BRL (existentes)
         function convertVesToBrl() {
             const rate = parseFloat(rateVesToBrlInput.value);
             const vesAmount = parseFloat(vesInput.value);
@@ -387,7 +538,6 @@
             }
         }
 
-        // Función para convertir BRL a VES
         function convertBrlToVes() {
             const rate = parseFloat(rateBrlToVesInput.value);
             const brlAmount = parseFloat(brlInput.value);
@@ -405,8 +555,44 @@
             }
         }
 
+        // Funciones USD P2P (nuevas)
+        function convertVesToUsd() {
+            const rate = parseFloat(rateUsdP2pInput.value);
+            const vesAmount = parseFloat(vesUsdInput.value);
+
+            if (rate && vesAmount) {
+                const usdAmount = vesAmount / rate;
+                usdResult.innerHTML = `💲 ${formatNumber(usdAmount)} USD`;
+                usdResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            } else if (vesAmount && !rate) {
+                usdResult.innerHTML = '⚠️ Falta la tasa';
+                usdResult.style.background = 'linear-gradient(135deg, #ffc107, #fd7e14)';
+            } else {
+                usdResult.innerHTML = 'Ingresa tasa y cantidad';
+                usdResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            }
+        }
+
+        function convertUsdToVes() {
+            const rate = parseFloat(rateUsdSellInput.value);
+            const usdAmount = parseFloat(usdSellInput.value);
+
+            if (rate && usdAmount) {
+                const vesAmount = usdAmount * rate;
+                vesSellResult.innerHTML = `💰 ${formatNumber(vesAmount)} VES`;
+                vesSellResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            } else if (usdAmount && !rate) {
+                vesSellResult.innerHTML = '⚠️ Falta la tasa';
+                vesSellResult.style.background = 'linear-gradient(135deg, #ffc107, #fd7e14)';
+            } else {
+                vesSellResult.innerHTML = 'Ingresa tasa y cantidad';
+                vesSellResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            }
+        }
+
         // Función para limpiar todo
         function clearAll() {
+            // Limpiar VES-BRL
             rateVesToBrlInput.value = '';
             rateBrlToVesInput.value = '';
             vesInput.value = '';
@@ -415,17 +601,31 @@
             vesResult.innerHTML = 'Ingresa tasa y cantidad';
             brlResult.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
             vesResult.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+
+            // Limpiar USD P2P
+            rateUsdP2pInput.value = '';
+            rateUsdSellInput.value = '';
+            vesUsdInput.value = '';
+            usdSellInput.value = '';
+            usdResult.innerHTML = 'Ingresa tasa y cantidad';
+            vesSellResult.innerHTML = 'Ingresa tasa y cantidad';
+            usdResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            vesSellResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
         }
 
-        // Event listeners para VES a BRL
+        // Event listeners VES-BRL
         rateVesToBrlInput.addEventListener('input', convertVesToBrl);
         vesInput.addEventListener('input', convertVesToBrl);
-
-        // Event listeners para BRL a VES
         rateBrlToVesInput.addEventListener('input', convertBrlToVes);
         brlInput.addEventListener('input', convertBrlToVes);
 
-        // Guardar las tasas en localStorage
+        // Event listeners USD P2P
+        rateUsdP2pInput.addEventListener('input', convertVesToUsd);
+        vesUsdInput.addEventListener('input', convertVesToUsd);
+        rateUsdSellInput.addEventListener('input', convertUsdToVes);
+        usdSellInput.addEventListener('input', convertUsdToVes);
+
+        // Guardar todas las tasas en localStorage
         rateVesToBrlInput.addEventListener('input', () => {
             localStorage.setItem('rateVesToBrl', rateVesToBrlInput.value);
         });
@@ -434,10 +634,20 @@
             localStorage.setItem('rateBrlToVes', rateBrlToVesInput.value);
         });
 
+        rateUsdP2pInput.addEventListener('input', () => {
+            localStorage.setItem('rateUsdP2p', rateUsdP2pInput.value);
+        });
+
+        rateUsdSellInput.addEventListener('input', () => {
+            localStorage.setItem('rateUsdSell', rateUsdSellInput.value);
+        });
+
         // Cargar las tasas guardadas al iniciar
         window.addEventListener('load', () => {
             const savedRateVesToBrl = localStorage.getItem('rateVesToBrl');
             const savedRateBrlToVes = localStorage.getItem('rateBrlToVes');
+            const savedRateUsdP2p = localStorage.getItem('rateUsdP2p');
+            const savedRateUsdSell = localStorage.getItem('rateUsdSell');
             
             if (savedRateVesToBrl) {
                 rateVesToBrlInput.value = savedRateVesToBrl;
@@ -445,6 +655,14 @@
             
             if (savedRateBrlToVes) {
                 rateBrlToVesInput.value = savedRateBrlToVes;
+            }
+
+            if (savedRateUsdP2p) {
+                rateUsdP2pInput.value = savedRateUsdP2p;
+            }
+
+            if (savedRateUsdSell) {
+                rateUsdSellInput.value = savedRateUsdSell;
             }
         });
 
