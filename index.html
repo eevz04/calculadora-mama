@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💱 Calculadora VES-BRL | Para Mamá</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .flags {
+            font-size: 32px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .exchange-rate {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e1e5f2;
+        }
+
+        .rate-label {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .rate-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .rate-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .converter-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid #e1e5f2;
+        }
+
+        .converter-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .currency-input {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .currency-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .currency-label {
+            font-weight: bold;
+            color: #555;
+            min-width: 60px;
+        }
+
+        .arrow {
+            font-size: 20px;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .result {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .clear-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .clear-btn:hover {
+            background: #ff5252;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .heart {
+            color: #ff6b6b;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            .calculator {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .flags {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="header">
+            <h1 class="title">💰 Calculadora de Divisas</h1>
+            <p class="subtitle">VES ⇄ BRL</p>
+            <div class="flags">
+                🇻🇪 ⇄ 🇧🇷
+            </div>
+        </div>
+
+        <div class="exchange-rate">
+            <div class="rate-label">📊 Tasa del día (VES por 1 BRL)</div>
+            <input type="number" id="exchangeRate" class="rate-input" placeholder="Ej: 26.5" step="0.01">
+        </div>
+
+        <div class="converter-section">
+            <div class="converter-title">
+                🇻🇪 Bolívares → Reales 🇧🇷
+            </div>
+            <div class="input-group">
+                <span class="currency-label">VES:</span>
+                <input type="number" id="vesInput" class="currency-input" placeholder="1500" step="0.01">
+            </div>
+            <div class="arrow">⬇️</div>
+            <div class="result" id="brlResult">Ingresa la tasa y cantidad</div>
+        </div>
+
+        <div class="converter-section">
+            <div class="converter-title">
+                🇧🇷 Reales → Bolívares 🇻🇪
+            </div>
+            <div class="input-group">
+                <span class="currency-label">BRL:</span>
+                <input type="number" id="brlInput" class="currency-input" placeholder="150" step="0.01">
+            </div>
+            <div class="arrow">⬇️</div>
+            <div class="result" id="vesResult">Ingresa la tasa y cantidad</div>
+        </div>
+
+        <button class="clear-btn" onclick="clearAll()">🗑️ Limpiar Todo</button>
+
+        <div class="footer">
+            Hecho con <span class="heart">❤️</span> para mamá
+        </div>
+    </div>
+
+    <script>
+        // Referencias a los elementos
+        const exchangeRateInput = document.getElementById('exchangeRate');
+        const vesInput = document.getElementById('vesInput');
+        const brlInput = document.getElementById('brlInput');
+        const brlResult = document.getElementById('brlResult');
+        const vesResult = document.getElementById('vesResult');
+
+        // Función para formatear números
+        function formatNumber(num) {
+            return new Intl.NumberFormat('es-VE', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(num);
+        }
+
+        // Función para convertir VES a BRL
+        function convertVesToBrl() {
+            const rate = parseFloat(exchangeRateInput.value);
+            const vesAmount = parseFloat(vesInput.value);
+
+            if (rate && vesAmount) {
+                const brlAmount = vesAmount / rate;
+                brlResult.innerHTML = `💰 ${formatNumber(brlAmount)} BRL`;
+                brlResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            } else if (vesAmount && !rate) {
+                brlResult.innerHTML = '⚠️ Ingresa la tasa primero';
+                brlResult.style.background = 'linear-gradient(135deg, #ffc107, #fd7e14)';
+            } else {
+                brlResult.innerHTML = 'Ingresa la tasa y cantidad';
+                brlResult.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            }
+        }
+
+        // Función para convertir BRL a VES
+        function convertBrlToVes() {
+            const rate = parseFloat(exchangeRateInput.value);
+            const brlAmount = parseFloat(brlInput.value);
+
+            if (rate && brlAmount) {
+                const vesAmount = brlAmount * rate;
+                vesResult.innerHTML = `💰 ${formatNumber(vesAmount)} VES`;
+                vesResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            } else if (brlAmount && !rate) {
+                vesResult.innerHTML = '⚠️ Ingresa la tasa primero';
+                vesResult.style.background = 'linear-gradient(135deg, #ffc107, #fd7e14)';
+            } else {
+                vesResult.innerHTML = 'Ingresa la tasa y cantidad';
+                vesResult.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            }
+        }
+
+        // Función para limpiar todo
+        function clearAll() {
+            exchangeRateInput.value = '';
+            vesInput.value = '';
+            brlInput.value = '';
+            brlResult.innerHTML = 'Ingresa la tasa y cantidad';
+            vesResult.innerHTML = 'Ingresa la tasa y cantidad';
+            brlResult.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            vesResult.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+        }
+
+        // Event listeners
+        exchangeRateInput.addEventListener('input', () => {
+            convertVesToBrl();
+            convertBrlToVes();
+        });
+
+        vesInput.addEventListener('input', convertVesToBrl);
+        brlInput.addEventListener('input', convertBrlToVes);
+
+        // Guardar la tasa en localStorage
+        exchangeRateInput.addEventListener('input', () => {
+            localStorage.setItem('exchangeRate', exchangeRateInput.value);
+        });
+
+        // Cargar la tasa guardada al iniciar
+        window.addEventListener('load', () => {
+            const savedRate = localStorage.getItem('exchangeRate');
+            if (savedRate) {
+                exchangeRateInput.value = savedRate;
+            }
+        });
+
+        // Prevenir zoom en iOS al hacer focus en inputs
+        document.addEventListener('touchstart', {});
+    </script>
+</body>
+</html>
