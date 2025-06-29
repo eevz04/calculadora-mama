@@ -57,44 +57,13 @@
             gap: 20px;
         }
 
-        .exchange-rate {
-            background: #f8f9ff;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 2px solid #e1e5f2;
-        }
-
-        .rate-label {
-            font-size: 16px;
-            color: #555;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .rate-input {
-            width: 100%;
-            padding: 12px;
-            font-size: 18px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .rate-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
         .converter-section {
             background: #fff;
             border-radius: 12px;
             padding: 20px;
             margin: 15px 0;
-            border: 1px solid #e1e5f2;
+            border: 2px solid #e1e5f2;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
         .converter-title {
@@ -106,6 +75,38 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+        }
+
+        .rate-section {
+            background: #f8f9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #e1e5f2;
+        }
+
+        .rate-label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .rate-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .rate-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .input-group {
@@ -160,7 +161,7 @@
             border-radius: 8px;
             font-size: 14px;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 20px;
             font-weight: 600;
         }
 
@@ -183,6 +184,13 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
+        }
+
+        .separator {
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 25px 0;
+            border-radius: 1px;
         }
 
         @media (max-width: 480px) {
@@ -211,15 +219,16 @@
             </div>
         </div>
 
-        <div class="exchange-rate">
-            <div class="rate-label">📊 Tasa del día (VES por 1 BRL)</div>
-            <input type="number" id="exchangeRate" class="rate-input" placeholder="Ej: 26.5" step="0.01">
-        </div>
-
         <div class="converter-section">
             <div class="converter-title">
                 🇻🇪 Bolívares → Reales 🇧🇷
             </div>
+            
+            <div class="rate-section">
+                <div class="rate-label">📊 Tasa VES a BRL (cuántos VES por 1 BRL)</div>
+                <input type="number" id="rateVesToBrl" class="rate-input" placeholder="Ej: 26.5" step="0.01">
+            </div>
+
             <div class="input-group">
                 <span class="currency-label">VES:</span>
                 <input type="number" id="vesInput" class="currency-input" placeholder="1500" step="0.01">
@@ -228,10 +237,18 @@
             <div class="result" id="brlResult">Ingresa la tasa y cantidad</div>
         </div>
 
+        <div class="separator"></div>
+
         <div class="converter-section">
             <div class="converter-title">
                 🇧🇷 Reales → Bolívares 🇻🇪
             </div>
+            
+            <div class="rate-section">
+                <div class="rate-label">📊 Tasa BRL a VES (cuántos VES por 1 BRL)</div>
+                <input type="number" id="rateBrlToVes" class="rate-input" placeholder="Ej: 27.0" step="0.01">
+            </div>
+
             <div class="input-group">
                 <span class="currency-label">BRL:</span>
                 <input type="number" id="brlInput" class="currency-input" placeholder="150" step="0.01">
@@ -249,7 +266,8 @@
 
     <script>
         // Referencias a los elementos
-        const exchangeRateInput = document.getElementById('exchangeRate');
+        const rateVesToBrlInput = document.getElementById('rateVesToBrl');
+        const rateBrlToVesInput = document.getElementById('rateBrlToVes');
         const vesInput = document.getElementById('vesInput');
         const brlInput = document.getElementById('brlInput');
         const brlResult = document.getElementById('brlResult');
@@ -265,7 +283,7 @@
 
         // Función para convertir VES a BRL
         function convertVesToBrl() {
-            const rate = parseFloat(exchangeRateInput.value);
+            const rate = parseFloat(rateVesToBrlInput.value);
             const vesAmount = parseFloat(vesInput.value);
 
             if (rate && vesAmount) {
@@ -273,7 +291,7 @@
                 brlResult.innerHTML = `💰 ${formatNumber(brlAmount)} BRL`;
                 brlResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
             } else if (vesAmount && !rate) {
-                brlResult.innerHTML = '⚠️ Ingresa la tasa primero';
+                brlResult.innerHTML = '⚠️ Ingresa la tasa VES→BRL primero';
                 brlResult.style.background = 'linear-gradient(135deg, #ffc107, #fd7e14)';
             } else {
                 brlResult.innerHTML = 'Ingresa la tasa y cantidad';
@@ -283,7 +301,7 @@
 
         // Función para convertir BRL a VES
         function convertBrlToVes() {
-            const rate = parseFloat(exchangeRateInput.value);
+            const rate = parseFloat(rateBrlToVesInput.value);
             const brlAmount = parseFloat(brlInput.value);
 
             if (rate && brlAmount) {
@@ -291,7 +309,7 @@
                 vesResult.innerHTML = `💰 ${formatNumber(vesAmount)} VES`;
                 vesResult.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
             } else if (brlAmount && !rate) {
-                vesResult.innerHTML = '⚠️ Ingresa la tasa primero';
+                vesResult.innerHTML = '⚠️ Ingresa la tasa BRL→VES primero';
                 vesResult.style.background = 'linear-gradient(135deg, #ffc107, #fd7e14)';
             } else {
                 vesResult.innerHTML = 'Ingresa la tasa y cantidad';
@@ -301,7 +319,8 @@
 
         // Función para limpiar todo
         function clearAll() {
-            exchangeRateInput.value = '';
+            rateVesToBrlInput.value = '';
+            rateBrlToVesInput.value = '';
             vesInput.value = '';
             brlInput.value = '';
             brlResult.innerHTML = 'Ingresa la tasa y cantidad';
@@ -310,25 +329,34 @@
             vesResult.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
         }
 
-        // Event listeners
-        exchangeRateInput.addEventListener('input', () => {
-            convertVesToBrl();
-            convertBrlToVes();
-        });
-
+        // Event listeners para VES a BRL
+        rateVesToBrlInput.addEventListener('input', convertVesToBrl);
         vesInput.addEventListener('input', convertVesToBrl);
+
+        // Event listeners para BRL a VES
+        rateBrlToVesInput.addEventListener('input', convertBrlToVes);
         brlInput.addEventListener('input', convertBrlToVes);
 
-        // Guardar la tasa en localStorage
-        exchangeRateInput.addEventListener('input', () => {
-            localStorage.setItem('exchangeRate', exchangeRateInput.value);
+        // Guardar las tasas en localStorage
+        rateVesToBrlInput.addEventListener('input', () => {
+            localStorage.setItem('rateVesToBrl', rateVesToBrlInput.value);
         });
 
-        // Cargar la tasa guardada al iniciar
+        rateBrlToVesInput.addEventListener('input', () => {
+            localStorage.setItem('rateBrlToVes', rateBrlToVesInput.value);
+        });
+
+        // Cargar las tasas guardadas al iniciar
         window.addEventListener('load', () => {
-            const savedRate = localStorage.getItem('exchangeRate');
-            if (savedRate) {
-                exchangeRateInput.value = savedRate;
+            const savedRateVesToBrl = localStorage.getItem('rateVesToBrl');
+            const savedRateBrlToVes = localStorage.getItem('rateBrlToVes');
+            
+            if (savedRateVesToBrl) {
+                rateVesToBrlInput.value = savedRateVesToBrl;
+            }
+            
+            if (savedRateBrlToVes) {
+                rateBrlToVesInput.value = savedRateBrlToVes;
             }
         });
 
